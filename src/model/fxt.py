@@ -625,8 +625,6 @@ class FxTTransformerLM(nn.Module):
   
         if task == "LM":
             return loss, overall_stats, loss_boundaries, shift_logits
-        if task == "generation":
-            return logit, pre_upsample, self.last_hidden
         
         else:
             if task == "tokenization2":
@@ -634,67 +632,6 @@ class FxTTransformerLM(nn.Module):
                 overall_stats['priors'] = pred_priors.tolist()
             return hidden, overall_stats, loss_boundaries
     
-    def generate_next(self, data, num_tokens=1):
-        """Generates tokens."""
-        count = -1
-        out = []
-        dtype = data['input_ids'].dtype
-        device = data['input_ids'].device
-        data['input_ids'] = data['input_ids'][:, :-1] # remove the <s/> token
-        orig_len = data['input_ids'][:, 1:].shape[-1]
-
-        with torch.no_grad():
-            while count != num_tokens:
-                if len(out) == 0:
-                    logit, pre_upsample, last_hidden = self.forward(
-                        data, "generation"
-                    )
-                    logit = logit.squeeze()
-                    out = [logit[-1].argmax().item()]
-
-                # finished token, start a new one
-                if out[-1] == self.n_token-1:
-                    count += 1
-                    if count == num_tokens:
-                        return data['input_ids'][:, orig_len:].squeeze()
-
-                    # sample first character
-                    char_vec = self.word_emb(
-                        torch.tensor([[out[-1]]], dtype=dtype, device=device)
-                    )
-                    new_vec = pre_upsample[-1].unsqueeze(0) + char_vec
-                    last_hidden = torch.cat([last_hidden, new_vec], dim=0)
-                    hidden = self._forward(
-                        core_input=last_hidden, layers=self.layers[-1]
-                    )
-                    logit = self.final_cast(hidden).squeeze()
-                    out = [logit[-1].argmax().item()]
-
-                    # reset pre_upsample
-                    data['input_ids'] = torch.cat(
-                        [data['input_ids'], torch.LongTensor([out]).to(device)], dim=1
-                    )
-                    logit, pre_upsample, last_hidden = self.forward(
-                        data, "generation"
-                    )
-                    logit = logit.squeeze()
-                    out = [logit[-1].argmax().item()]
-
-                # continue rest of token
-                while out[-1] != self.n_token-1:
-                    char_vec = self.word_emb(
-                        torch.tensor([[out[-1]]], dtype=dtype, device=device)
-                    )
-                    new_vec = pre_upsample[-1].unsqueeze(0) + char_vec
-                    last_hidden = torch.cat([last_hidden, new_vec], dim=0)
-                    hidden = self._forward(
-                        core_input=last_hidden, layers=self.layers[-1]
-                    )
-                    logit = self.final_cast(hidden).squeeze()
-                    out.append(logit[-1].argmax().item())
-                out_tensor = torch.LongTensor(out[:-1]).unsqueeze(0).to(device)
-                data['input_ids'] = torch.cat([data["input_ids"], out_tensor], dim=1)
-
 
         
 
