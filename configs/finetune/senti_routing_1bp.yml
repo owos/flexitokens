@@ -1,0 +1,32 @@
+en_te_text: &en_te_text
+  dataset_name: sentiment
+  joint_input: True
+
+model: &model
+  n_labels: 5
+  pretrained_path: 
+  model_type: routing
+
+optim: &optim
+  optim: adam
+  scheduler: cosine
+  clip: 1.0
+  weight_decay: 0
+  adam_b1: 0.9
+  adam_b2: 0.999
+  adam_eps: 1e-8
+
+train: &train
+  seq_len: 2048
+  gradient_accumulation_steps: 4
+  warmup_ratio: 0.1
+  num_warmup_steps: 1500
+  checkpointing_steps: "epoch"
+  num_train_epochs: 5
+
+default:
+  train:
+    <<: *en_te_text
+    <<: *model
+    <<: *optim
+    <<: *train

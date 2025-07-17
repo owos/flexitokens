@@ -1,0 +1,102 @@
+en_te_text: &en_te_text
+   data: ~/owos/experiments/fxt/data/fineweb/
+   cache_dir: ~/owos/.cache/
+   language_to_script:
+      en: en
+      es: es
+      ru: ru
+      uk: uk
+      hi: hi
+      te: te
+   streaming: True
+   load_from_disk: True #set this to true to load an already cached dataset
+   num_proc: 1
+   train_size:
+      en: 2050000
+      es: 1640000
+      ru: 1640000
+      uk: 1640000
+      hi: 1640000
+      te: 1640000
+   val_size:
+      en: 10000
+      es: 10000
+      ru: 10000
+      uk: 10000
+      hi: 10000
+      te: 10000
+
+model: &model
+   d_model: 2048
+   n_head: 16
+   d_head: 64
+   d_inner: 8192
+   dropout: 0.1
+   dropatt: 0.1
+   pre_lnorm: false
+   model_config: "[2, (20,), 2]"
+   activation_function: gelu
+   shuffle: true
+   roll: true
+   nw: 8
+   fp16: true
+   boundary_supervision: False
+   num_predictors: 1
+   seq_len: 2048
+   learn_prior: False
+   use_bytle: False
+   use_binomial: False
+   s_lower_bound: 3
+
+
+
+boundaries: &boundaries
+   boundaries_type: 'gumbel'
+   fixed_sf: 2
+   spikes_left: 2
+   temp: 0.5
+   prior_one: 0.5
+   prior_two: 0.2
+   script_tokens: "en,es,ru,uk,hi,te"
+   prior_list: "0.333,0.275,0.167,0.178,0.13,0.124"
+   prior_std: "0.023,0.019,0.011,0.012,0.009,0.008"
+
+eval: &eval
+   eval_interval: 5000
+   eval_max_steps: 5000
+   eval_tgt_len: 2048
+   eval_total_len: 2048
+   eval_batch_size: 4
+
+optim: &optim
+   optim: adam
+   scheduler: cosine
+   #lr: 0.00025
+   lr: 3e-4
+   warmup_step: 9000
+   clip: 0.25
+   weight_decay: 0
+   adam_b1: 0.9
+   adam_b2: 0.999
+   adam_eps: 1e-8
+   reset_lr: true
+
+
+train: &train
+   max_train_steps: 65000
+   batch_size: 4
+   seq_len: 2048
+   line_by_line: true
+   gradient_accumulation_steps: 32
+   num_warmup_steps: 9000
+   checkpointing_steps: "1000"
+   num_train_epochs: 1
+   
+default:
+   train:
+      <<: *en_te_text
+      <<: *model
+      <<: *boundaries
+      <<: *eval
+      <<: *optim
+      <<: *train
