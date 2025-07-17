@@ -288,7 +288,6 @@ class BoundaryPredictor(nn.Module):
                     ).mean() / preds.size(-1)
                     
             else:
-                # loss_boundaries = torch.clamp((sum_preds/ total_count) - self.pred_prior, min=0.0).mean()
                 #non-binomial loss
                 
                 est_prior = sum_preds / total_count
