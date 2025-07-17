@@ -4,10 +4,10 @@
 Language models (LMs) are challenging to adapt to new distributions by simply finetuning because their subword tokenizers remain unchanged during adaptation. FLEXITOKENS addresses this by using a simplified training objective that enables significantly greater flexibility during adaptation.
 
 
+
 ![FLEXITOKENS](paper/flexitoken_vs_BPE.png)
 
-
-
+*An example of tokenized medical text, where FLEXITOKENS produces a less fragmented sequence of tokens than BPE. Unlike BPE which applies a fixed tokenization, FLEXITOKENS adapts its tokenization to the medical domain, capturing domain-specific patterns more effectively.*
 
 ## 📁 Repository Structure
 
