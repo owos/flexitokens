@@ -1,5 +1,4 @@
-# Our paper is currently being processed by Arxiv.
-# FLEXITOKENS: Flexible Tokenization for Evolving Language Models
+# [FLEXITOKENS: Flexible Tokenization for Evolving Language Models](https://arxiv.org/abs/2507.12720)
 
 Language models (LMs) are challenging to adapt to new distributions by simply finetuning because their subword tokenizers remain unchanged during adaptation. FLEXITOKENS addresses this by using a simplified training objective that enables significantly greater flexibility during adaptation.
 
@@ -118,7 +117,10 @@ bash scripts/finetune/sib200_routing.sh
 ## 📝 Citation
 If you use FlexiTokens in your research, please cite our paper:
 ```bibtex
-
+@article{owodunniflexitokens,
+  title={FlexiTokens: Flexible Tokenization for Evolving Language Models},
+  author={Owodunni, Abraham Toluwase and Ahia, Orevaoghene and Kumar, Sachin}
+}
 ```
 
 
