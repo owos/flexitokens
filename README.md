@@ -117,10 +117,13 @@ bash scripts/finetune/sib200_routing.sh
 ## 📝 Citation
 If you use FlexiTokens in your research, please cite our paper:
 ```bibtex
-@article{owodunniflexitokens,
-  title={FlexiTokens: Flexible Tokenization for Evolving Language Models},
-  author={Owodunni, Abraham Toluwase and Ahia, Orevaoghene and Kumar, Sachin}
+@article{owodunni2025flexitokens,
+  title={FLEXITOKENS: Flexible Tokenization for Evolving Language Models},
+  author={Owodunni, Abraham Toluase and Ahia, Orevaoghene and Kumar, Sachin},
+  journal={arXiv preprint arXiv:2507.12720},
+  year={2025}
 }
+
 ```
 
 
