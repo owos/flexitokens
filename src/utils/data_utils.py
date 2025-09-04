@@ -409,8 +409,8 @@ class FxTDataset(object):
                         os.makedirs(save_dir)
 
                     # Save the dataset to disk
-                    # train = save_to_disk(train, save_dir, "train")
-                    # validation = save_to_disk(validation, save_dir, "validation")
+                    train = save_to_disk(train, save_dir, "train")
+                    validation = save_to_disk(validation, save_dir, "validation")
                     test = save_to_disk(test, save_dir, "test")
 
                     dataset = IterableDatasetDict(
