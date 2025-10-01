@@ -739,11 +739,11 @@ class FxTAverageSingleInputWithPadding(nn.Module):
     """
 
     # compute loss over non-padded tokens
-    def __init__(self, num_labels, pretrained_mem_transformer, task="seq_cls"):
+    def __init__(self, num_labels, pretrained_FxT_transformer, task="seq_cls"):
         super(FxTAverageSingleInputWithPadding, self).__init__()
-        self.memtransformer = pretrained_mem_transformer
+        self.FxTtransformer = pretrained_FxT_transformer
         self.score = nn.Linear(
-            pretrained_mem_transformer.d_model, num_labels, bias=False
+            pretrained_FxT_transformer.d_model, num_labels, bias=False
         )
         self.num_labels = num_labels
         self.fct = nn.CrossEntropyLoss()
@@ -751,8 +751,7 @@ class FxTAverageSingleInputWithPadding(nn.Module):
 
     def forward(self, input_batch):
         # get the number of in
-        # hidden_states, stats, boundary_loss = self.memtransformer(input_batch["input_ids"], input_batch["input_ids"].clone(), task="class")
-        hidden_states, stats, boundary_loss = self.memtransformer(
+        hidden_states, stats, boundary_loss = self.FxTtransformer(
             input_batch, task=self.task
         )
         # Compute mean without considering padding
@@ -767,7 +766,6 @@ class FxTAverageSingleInputWithPadding(nn.Module):
             input_batch["labels"] = input_batch["labels"][
                 :, :-1
             ].contiguous()  # removing the last token that was induced due to lang id
-        # hidden_states = torch.mean(hidden_states, dim=0)
         logits = self.score(hidden_states)
 
         loss = self.fct(
